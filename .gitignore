@@ -1,0 +1,40 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*.local
+
+# Next.js
+.next/
+.next-standalone/
+out/
+.next/cache/
+
+# Build
+build/
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Misc
+coverage/
+**/*.local
