@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Raleway } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import ErrorListener from "@/components/error-listener"
 
 const raleway = Raleway({ subsets: ["latin"], variable: "--font-raleway" })
 
@@ -29,6 +30,7 @@ export default function RootLayout({
       </head>
       <body className={`${raleway.className} font-sans`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <ErrorListener />
           {children}
         </ThemeProvider>
       </body>

@@ -1,3 +1,5 @@
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -8,6 +10,14 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+  },
+  webpack: (config) => {
+    const hasMiniCss = config.plugins?.some((p) => p && p.constructor && p.constructor.name === "MiniCssExtractPlugin")
+    if (!hasMiniCss) {
+      config.plugins = config.plugins || []
+      config.plugins.push(new MiniCssExtractPlugin())
+    }
+    return config
   },
 }
 

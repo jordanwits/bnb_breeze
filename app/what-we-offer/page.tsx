@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useMemo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import Reveal from "@/components/reveal"
+import { motion } from "framer-motion"
 import {
   Home,
   Sparkles,
@@ -47,11 +48,11 @@ interface ServiceFeature {
   description: string
 }
 
-const SectionHeader: React.FC<{ title: string; subtitle?: string }> = ({ title, subtitle }) => (
-  <Reveal staggerChildren className="mb-8 sm:mb-10 md:mb-12 text-center">
-    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-bnb-navy mb-3">{title}</h2>
+const SectionHeader: React.FC<{ title: string; subtitle?: string; className?: string; titleClassName?: string; subtitleClassName?: string; }> = ({ title, subtitle, className = "", titleClassName = "", subtitleClassName = "" }) => (
+  <Reveal staggerChildren className={`mb-8 sm:mb-10 md:mb-12 text-center ${className}`}>
+    <h2 className={cn("text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-bnb-navy mb-3", titleClassName)}>{title}</h2>
     {subtitle && (
-      <p className="text-base sm:text-lg md:text-xl text-bnb-gray-dark max-w-2xl mx-auto px-4">{subtitle}</p>
+      <p className={cn("text-base sm:text-lg md:text-xl text-bnb-gray-dark max-w-2xl mx-auto px-4", subtitleClassName)}>{subtitle}</p>
     )}
   </Reveal>
 )
@@ -195,7 +196,8 @@ export default function WhatWeOfferPage() {
   const translateXRef = useRef<number>(0)
   const gapPxRef = useRef<number>(24)
   const [isMarqueePaused, setIsMarqueePaused] = useState(false)
-
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const isMountedRef = useRef(true)
 
   const properties = [
     "Luxury Mountain Cabin",
@@ -204,6 +206,33 @@ export default function WhatWeOfferPage() {
     "City Center Apartment",
     "Countryside Retreat",
   ]
+
+  useEffect(() => {
+    isMountedRef.current = true
+    // Attempt to play the video programmatically and catch any errors
+    const videoElement = videoRef.current
+    if (videoElement) {
+      const promise = videoElement.play()
+      if (promise !== undefined) {
+        promise.catch((error) => {
+          // Only log the error if the component is still mounted.
+          // This prevents logging errors from aborted play requests during hot-reload.
+          if (isMountedRef.current) {
+            // eslint-disable-next-line no-console
+            console.error("Video autoplay was prevented:", error)
+          }
+        })
+      }
+    }
+
+    // Cleanup function to pause the video on component unmount (or hot-reload)
+    return () => {
+      isMountedRef.current = false
+      if (videoElement) {
+        videoElement.pause()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -526,44 +555,132 @@ export default function WhatWeOfferPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[calc(60vh+60px)] flex items-center justify-center text-center bg-bnb-gray-dark overflow-hidden">
+      <section className="relative flex items-center overflow-hidden bg-bnb-gray-dark py-12 wide:py-0 min-h-[calc(55vh+60px)] md:min-h-[70vh]">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
+          onError={(e) => {
+            // eslint-disable-next-line no-console
+            console.error("Hero video error", (e as any).currentTarget?.error)
+          }}
         >
           <source src="/hero-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         {/* Black overlay for contrast */}
-        <div className="absolute inset-0 bg-black/40 z-5"></div>
-        <Reveal staggerChildren className="relative z-10 max-w-3xl mx-auto px-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 leading-tight">
-            Unlock Your Property's Potential with BNB Breeze
-          </h1>
-          <p className="text-base md:text-lg text-white/90 mb-6 font-normal">
-            We provide comprehensive short-term rental management services, ensuring your peace of mind and maximizing
-            your returns.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            size="lg"
-              className="bg-bnb-blue text-white hover:bg-opacity-90 px-8 py-3 text-base md:text-lg rounded-full"
-            asChild
-          >
-              <Link href="#contact-us">Partner With Us</Link>
-            </Button>
-            <Button
-              size="lg"
-              className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-full text-white hover:bg-white/20 transition-colors px-8 py-3 text-base md:text-lg"
-              asChild
+        <div className="absolute inset-0 bg-black/60 z-5"></div>
+        {/* Content based on provided design */}
+        <div className="relative z-10 w-full">
+          <div className="container mx-auto flex max-w-7xl flex-col items-center gap-10 px-4 pt-24 pb-12 md:px-6 wide:flex-row wide:py-14">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="w-full text-center wide:text-left wide:flex-1 wide:min-w-[500px]"
             >
-              <Link href="#process-startup">See Our Process</Link>
-          </Button>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-white/80 ring-1 ring-white/15 backdrop-blur">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
+                New: 3-step onboarding in under a week
+              </div>
+
+              <h1 className="mt-4 text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl text-white">
+                Unlock Your Property's Potential
+                <span className="block">with BNB Breeze</span>
+              </h1>
+
+              <p className="mx-auto mt-5 max-w-2xl text-base text-white/80 wide:mx-0 md:text-lg">
+                We provide comprehensive short-term rental management services, ensuring your peace of mind and maximizing your returns.
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center justify-center gap-3 wide:justify-start">
+                <Link
+                  href="#contact-us"
+                  className="rounded-2xl bg-bnb-blue px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-opacity-90"
+                >
+                  Partner With Us
+                </Link>
+                <Link
+                  href="#process-startup"
+                  className="rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10"
+                >
+                  See Our Process
+                </Link>
+                <div className="ml-2 flex items-center gap-2 text-xs text-white/70">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm1 15h-2v-2h2Zm0-4h-2V7h2Z" />
+                  </svg>
+                  No long-term lock-ins · Cancel anytime
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center gap-4 wide:justify-start">
+                <div className="flex flex-shrink-0 -space-x-3">
+                  {["https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100&auto=format&fit=crop","https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=100&auto=format&fit=crop","https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=100&auto=format&fit=crop","https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop"].map((src,i)=> (
+                    <img key={src} src={src} alt={`Owner avatar ${i+1}`} className="h-9 w-9 flex-shrink-0 rounded-full border-2 border-white/80 object-cover" />
+                  ))}
+                </div>
+                <p className="text-sm text-white/70">
+                  Over <strong className="text-white">11,000 reviews</strong> and
+                  <strong className="text-white"> 67,000+ guest nights</strong>—built on unforgettable stays and relentless focus on ROI
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.aside
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.7 }}
+              className="w-full wide:w-auto"
+            >
+              <div className="mx-auto w-full max-w-3xl rounded-3xl border border-white/15 bg-white/10 p-6 shadow-2xl backdrop-blur wide:min-w-[560px] md:p-8 text-white">
+                <p className="text-xs uppercase tracking-wider text-white/70">Performance Snapshot</p>
+
+                {/* Clean, consistent grid */}
+                <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+                  {[{ label: "Total Reservations", value: "+14K" },{ label: "Guest Nights", value: "+67K" },{ label: "5-Star Reviews", value: "+10K" },{ label: "Portfolio Worth", value: "+$100M" }].map((s) => (
+                    <div
+                      key={s.label}
+                      className="rounded-xl bg-white/10 ring-1 ring-white/15 px-4 md:px-5 py-4 md:py-5 text-center flex flex-col items-center justify-center min-h-[100px] md:min-h-[120px]"
+                    >
+                      <div
+                        className={cn(
+                          "text-2xl font-extrabold leading-tight tabular-nums whitespace-nowrap",
+                          s.value.length > 5 ? "md:text-2xl" : "md:text-3xl"
+                        )}
+                      >
+                        {s.value}
+                      </div>
+                      <div className="mt-1 text-[10px] md:text-[11px] text-white/70">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Small badges */}
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-white/75">
+                  {["Start Up","List","Manage","$$$"] .map((step, i) => (
+                    <span key={i} className="rounded-full bg-white/10 px-2 py-1 ring-1 ring-white/15">{step}</span>
+                  ))}
+                </div>
+              </div>
+            </motion.aside>
           </div>
-        </Reveal>
+
+          {/* Bottom badges moved to section-level positioning */}
+        </div>
+
+        {/* Bottom badges (section-scoped absolute) */}
+        <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} transition={{delay:0.15, duration:0.5}} className="pointer-events-none absolute inset-x-0 bottom-4 md:bottom-6 z-10">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 md:gap-5 px-4 md:px-6">
+            {["Commission-Only Model", "11,000+ Reviews", "All-Star Investor Club", "Owner Portal"].map((b) => (
+              <div key={b} className="pointer-events-auto rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/80 backdrop-blur-md">{b}</div>
+            ))}
+          </div>
+        </motion.div>
+
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-bnb-blue/5 to-transparent z-6" />
       </section>
 
@@ -668,7 +785,7 @@ export default function WhatWeOfferPage() {
       </section>
 
       {/* Core Services Overview */}
-      <section className="py-16 md:py-20 bg-bnb-blue/5 relative overflow-hidden">
+      <section className="relative overflow-hidden bg-bnb-blue/5 py-16 md:py-20">
         {/* Background with subtle pattern */}
 
         {/* Decorative elements */}
@@ -1076,7 +1193,7 @@ export default function WhatWeOfferPage() {
                 className="block relative aspect-video rounded-2xl overflow-hidden shadow-xl bg-bnb-gray-dark group cursor-pointer"
               >
                 <Image
-                  src="/homeowner-testimonials-new.png"
+                  src="/YT THUMBNAILS (10).png"
                   alt="Homeowner testimonials featuring Floyd & Kim Zook and Willie & Kathy Zook sharing their BNB Breeze experience"
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -1170,11 +1287,20 @@ export default function WhatWeOfferPage() {
       </section>
 
       {/* Scope of Service Section */}
-      <section className="py-16 md:py-20 bg-bnb-blue/5">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="relative bg-bnb-blue/5 py-16 md:py-20">
+        <Image
+          src="/Beach house.webp"
+          alt="Beach house background"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative container mx-auto px-4 md:px-6">
           <SectionHeader
             title="Clear Expectations: What's Included & What's Not"
             subtitle="Transparency is key to a successful partnership. Here's exactly what you can expect from us and what remains your responsibility."
+            titleClassName="text-white"
+            subtitleClassName="text-white/80"
           />
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto mt-12">
             <div className="bg-white p-8 rounded-2xl shadow-lg border border-bnb-gray-light/20">
@@ -1312,7 +1438,14 @@ export default function WhatWeOfferPage() {
         </div>
       </section>
 
-      <section id="contact-us" className="py-16 md:py-24 bg-white relative overflow-hidden">
+      <section id="contact-us" className="relative overflow-hidden bg-white py-16 md:py-24">
+        <Image
+          src="/florida beach house.webp"
+          alt="Florida beach house background"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30" />
         {/* Decorative background elements */}
         <div className="absolute top-20 right-10 w-24 h-24 bg-bnb-blue/5 rounded-full blur-2xl"></div>
         <div className="absolute bottom-20 left-10 w-32 h-32 bg-bnb-blue/10 rounded-full blur-3xl"></div>
@@ -1325,23 +1458,23 @@ export default function WhatWeOfferPage() {
                 <div className="w-8 h-8 bg-bnb-blue rounded-full flex items-center justify-center mr-3">
                   <CheckCircle2 className="w-5 h-5 text-white" />
             </div>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-bnb-blue">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                   Your Next Step To Higher Returns
             </h2>
           </div>
-              <h3 className="text-xl md:text-2xl font-semibold text-bnb-navy mb-4 leading-tight">
+              <h3 className="text-xl md:text-2xl font-semibold text-white/90 mb-4 leading-tight">
                 Get In Touch With Our Team And Book A Free Strategy Call To See How Much Your Home Could Earn
               </h3>
-              <p className="text-lg text-bnb-gray-dark">Let us prove it to you.</p>
+              <p className="text-lg text-white/80">Let us prove it to you.</p>
             </div>
 
             {/* Contact Form */}
-            <div className="bg-gradient-to-br from-bnb-blue/5 to-bnb-blue/10 rounded-3xl p-8 md:p-12 border border-bnb-blue/20 shadow-xl">
+            <div className="rounded-3xl border border-white/20 bg-white/10 p-8 shadow-xl backdrop-blur-lg md:p-12">
               <form className="space-y-6">
                 {/* Name and Phone Row */}
               <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-bnb-navy mb-2">
+                    <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
                       Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1354,7 +1487,7 @@ export default function WhatWeOfferPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-bnb-navy mb-2">
+                    <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
                       Phone <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1371,7 +1504,7 @@ export default function WhatWeOfferPage() {
                 {/* Email and Property Address Row */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-bnb-navy mb-2">
+                    <label htmlFor="email" className="block text-sm font-semibold text-white mb-2">
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -1384,7 +1517,7 @@ export default function WhatWeOfferPage() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="property-address" className="block text-sm font-semibold text-bnb-navy mb-2">
+                    <label htmlFor="property-address" className="block text-sm font-semibold text-white mb-2">
                       Property Address
                     </label>
                     <input
@@ -1399,7 +1532,7 @@ export default function WhatWeOfferPage() {
 
                 {/* Comments */}
             <div>
-                  <label htmlFor="comments" className="block text-sm font-semibold text-bnb-navy mb-2">
+                  <label htmlFor="comments" className="block text-sm font-semibold text-white mb-2">
                     Comments
                   </label>
                   <textarea
@@ -1419,7 +1552,7 @@ export default function WhatWeOfferPage() {
                     name="newsletter"
                     className="mt-1 w-4 h-4 text-bnb-blue bg-white border-bnb-gray-light rounded focus:ring-bnb-blue focus:ring-2"
                   />
-                  <label htmlFor="newsletter" className="text-sm text-bnb-gray-dark leading-relaxed">
+                  <label htmlFor="newsletter" className="text-sm text-white/80 leading-relaxed">
                     Sign me up for insider deals and offers
                   </label>
           </div>

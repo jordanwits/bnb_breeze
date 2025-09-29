@@ -19,6 +19,10 @@ const config = {
       },
     },
     extend: {
+      screens: {
+        "tablet": "900px",
+        "wide": "1200px",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
