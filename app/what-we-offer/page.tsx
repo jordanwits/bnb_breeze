@@ -147,7 +147,7 @@ const ServiceDetailCard: React.FC<{
 const FeatureGrid: React.FC<{ features: ServiceFeature[]; columns?: 2 | 3 }> = ({ features, columns = 2 }) => (
   <Reveal staggerChildren className={`grid gap-6 sm:gap-8 ${columns === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2"} mt-8`}>
     {features.map((feature, index) => (
-      <div key={index} className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100">
+      <div key={index} className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-lg border border-white/20">
         <div>
           {/* Enhanced icon with background */}
           <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-bnb-blue to-bnb-blue/80 rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
@@ -681,7 +681,6 @@ export default function WhatWeOfferPage() {
           </div>
         </motion.div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-bnb-blue/5 to-transparent z-6" />
       </section>
 
       <section className="py-16 md:py-20 bg-white relative overflow-hidden">
@@ -786,6 +785,13 @@ export default function WhatWeOfferPage() {
 
       {/* Core Services Overview */}
       <section className="relative overflow-hidden bg-bnb-blue/5 py-16 md:py-20">
+        <Image
+          src="/23_440-s-pelican-dr-web (17 of 33).jpg"
+          alt="South Pelican Drive house interior"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50" />
         {/* Background with subtle pattern */}
 
         {/* Decorative elements */}
@@ -797,11 +803,11 @@ export default function WhatWeOfferPage() {
             <div className="inline-block px-4 py-2 bg-bnb-blue/10 rounded-full mb-4">
               <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">Our Services</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-bnb-navy mb-4 leading-tight">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
               Comprehensive Solutions for
               <span className="text-bnb-blue"> Your Success</span>
             </h2>
-            <p className="text-lg md:text-xl text-bnb-gray-dark max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
               At BNB Breeze, we handle every aspect of your short-term rental, so you don't have to. Discover how we
               elevate your property and guest experiences.
             </p>
@@ -1129,6 +1135,13 @@ export default function WhatWeOfferPage() {
       </section>
 
       <section className="py-16 md:py-20 bg-white relative overflow-hidden">
+        <Image
+          src="/8_440-s-pelican-dr-web (32 of 33).jpg"
+          alt="South Pelican Drive house background"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
         {/* Decorative background elements */}
         <div className="absolute top-20 right-10 w-24 h-24 bg-bnb-blue/5 rounded-full blur-2xl"></div>
         <div className="absolute bottom-20 left-10 w-32 h-32 bg-bnb-blue/10 rounded-full blur-3xl"></div>
@@ -1138,14 +1151,14 @@ export default function WhatWeOfferPage() {
             <div className="inline-block px-4 py-2 bg-bnb-blue/10 rounded-full mb-4">
               <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">Complete Management</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-bnb-navy mb-6 leading-tight">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
               The System Your STR Needs
             </h2>
-            <h3 className="text-2xl md:text-3xl font-bold text-bnb-blue mb-6 leading-tight">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
               A 360° Management System—Designed By Investors, For Investors—Built To Delight Guests And Maximize Your
               Returns.
             </h3>
-            <p className="text-lg md:text-xl text-bnb-gray-dark max-w-4xl mx-auto leading-relaxed mb-12">
+            <p className="text-lg md:text-xl text-white/80 max-w-4xl mx-auto leading-relaxed mb-12">
               From marketing and revenue management to cleaning, maintenance, and guest experience, we handle every
               detail so your property thrives year after year.
             </p>
@@ -1163,9 +1176,9 @@ export default function WhatWeOfferPage() {
             </Reveal>
 
             {/* Bottom CTA */}
-            <Reveal staggerChildren className="text-center bg-gradient-to-br from-bnb-blue/5 to-bnb-blue/10 rounded-3xl p-8 md:p-12 border border-bnb-blue/20">
-              <h4 className="text-2xl md:text-3xl font-bold text-bnb-navy mb-4">Ready To Experience The Difference?</h4>
-              <p className="text-bnb-gray-dark mb-8 max-w-2xl mx-auto text-lg">
+            <Reveal staggerChildren className="text-center bg-bnb-navy/80 rounded-3xl p-8 md:p-12 border border-white/20 shadow-2xl backdrop-blur">
+              <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready To Experience The Difference?</h4>
+              <p className="text-white/85 mb-8 max-w-2xl mx-auto text-lg">
                 Let us show you how our comprehensive system can transform your property into a high-performing rental
                 that guests love and you profit from.
               </p>
@@ -1289,12 +1302,12 @@ export default function WhatWeOfferPage() {
       {/* Scope of Service Section */}
       <section className="relative bg-bnb-blue/5 py-16 md:py-20">
         <Image
-          src="/Beach house.webp"
-          alt="Beach house background"
+          src="/11_440-s-pelican-dr-web (33 of 33).jpg"
+          alt="South Pelican Drive house background"
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative container mx-auto px-4 md:px-6">
           <SectionHeader
             title="Clear Expectations: What's Included & What's Not"
@@ -1440,7 +1453,7 @@ export default function WhatWeOfferPage() {
 
       <section id="contact-us" className="relative overflow-hidden bg-white py-16 md:py-24">
         <Image
-          src="/florida beach house.webp"
+          src="/30_saybrook-hall-twilight-web (6 of 13).jpg"
           alt="Florida beach house background"
           fill
           className="object-cover"

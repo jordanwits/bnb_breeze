@@ -4,6 +4,7 @@ import { Raleway } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import ErrorListener from "@/components/error-listener"
+import Script from "next/script"
 
 const raleway = Raleway({ subsets: ["latin"], variable: "--font-raleway" })
 
@@ -21,6 +22,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <Script id="suppress-benign-rejections" strategy="beforeInteractive">
+          {`
+            (function(){
+              function isEmptyObject(val){return typeof val==='object' && val!=null && !Array.isArray(val) && Object.keys(val).length===0}
+              function isBenign(reason){return reason==null || isEmptyObject(reason) || (typeof Event!=='undefined' && reason instanceof Event)}
+              window.addEventListener('unhandledrejection', function(ev){
+                var r = ev && ev.reason;
+                if (isBenign(r)) { try{ ev.preventDefault(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }catch(e){} }
+              }, { capture: true });
+              var prev = window.onunhandledrejection;
+              window.onunhandledrejection = function(ev){
+                var r = ev && ev.reason;
+                if (isBenign(r)) { try{ ev.preventDefault(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }catch(e){} return true; }
+                return prev ? prev.call(this, ev) : undefined;
+              };
+            })();
+          `}
+        </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
