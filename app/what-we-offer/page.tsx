@@ -1,12 +1,11 @@
 "use client"
 
-import React, { useState, useEffect, useRef, useMemo } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
+// Removed unused Carousel and Autoplay imports
 import Reveal from "@/components/reveal"
 import { motion } from "framer-motion"
 import {
@@ -41,6 +40,8 @@ import {
   MapPin,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import InvestorClubSection from "@/components/investor-club-section"
+import IncludedChart from "@/components/included-chart"
 
 interface ServiceFeature {
   icon: React.ElementType
@@ -163,32 +164,13 @@ const FeatureGrid: React.FC<{ features: ServiceFeature[]; columns?: 2 | 3 }> = (
 )
 
 // Simple, consistent-width stat card used by the marquee
-const StatCard: React.FC<{ title: string; value: string; Icon: React.ElementType }> = ({ title, value, Icon }) => (
-  <div className="w-[180px] h-full">
-    <div className="bg-bnb-navy border border-bnb-blue rounded-xl p-4 text-center relative shadow-lg flex flex-col justify-center h-full min-h-[110px]">
-      <div className="absolute -top-3 -right-3 w-8 h-8 bg-[#FBCA41] rounded-full flex items-center justify-center border-2 border-bnb-blue">
-        <Icon className="w-5 h-5 text-bnb-navy" />
-      </div>
-      <div className="text-xs sm:text-sm text-white uppercase tracking-wide mb-2 px-2 leading-tight">{title}</div>
-      <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-bnb-blue">{value}</div>
-    </div>
-  </div>
-)
-
-const statsData = [
-  { title: "Total Reservations", value: "+14K", Icon: CheckCircle2 },
-  { title: "Guest Nights", value: "+67K", Icon: Sparkles },
-  { title: "Guest Nights Into Years", value: "173", Icon: CalendarDays },
-  { title: "5 Star Reviews", value: "+10K", Icon: Award },
-  { title: "Portfolio Worth", value: "+100M", Icon: DollarSign },
-  { title: "States We Manage", value: "14", Icon: Users },
-]
+// Removed unused StatCard and statsData
 
 export default function WhatWeOfferPage() {
   const [selectedProperty, setSelectedProperty] = useState("Property Select")
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false) // New state for mobile menu
-  const autoplay = useRef(Autoplay({ delay: 2000, stopOnInteraction: false }))
+  // Removed unused autoplay ref
   // JS-driven marquee state/refs (variable-width, seamless)
   const marqueeTrackRef = useRef<HTMLDivElement | null>(null)
   const rafRef = useRef<number | null>(null)
@@ -212,6 +194,12 @@ export default function WhatWeOfferPage() {
     // Attempt to play the video programmatically and catch any errors
     const videoElement = videoRef.current
     if (videoElement) {
+      // Ensure mobile autoplay compatibility
+      videoElement.muted = true
+      ;(videoElement as any).playsInline = true
+      videoElement.setAttribute("playsinline", "")
+      videoElement.setAttribute("webkit-playsinline", "")
+
       const promise = videoElement.play()
       if (promise !== undefined) {
         promise.catch((error) => {
@@ -231,6 +219,54 @@ export default function WhatWeOfferPage() {
       if (videoElement) {
         videoElement.pause()
       }
+    }
+  }, [])
+
+  // Retry playback when video can play or when tab becomes visible
+  useEffect(() => {
+    const videoElement = videoRef.current
+    if (!videoElement) return
+
+    const tryPlay = () => {
+      const p = videoElement.play()
+      if (p && typeof p.then === "function") p.catch(() => {})
+    }
+
+    const onCanPlay = () => tryPlay()
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") tryPlay()
+    }
+
+    videoElement.addEventListener("canplay", onCanPlay)
+    document.addEventListener("visibilitychange", onVisibilityChange)
+
+    return () => {
+      videoElement.removeEventListener("canplay", onCanPlay)
+      document.removeEventListener("visibilitychange", onVisibilityChange)
+    }
+  }, [])
+
+  // Fallback: attempt play on first user interaction (mobile tap/click)
+  useEffect(() => {
+    const videoElement = videoRef.current
+    if (!videoElement) return
+
+    let attempted = false
+    const onFirstInteract = () => {
+      if (attempted) return
+      attempted = true
+      const p = videoElement.play()
+      if (p && typeof p.then === "function") p.catch(() => {})
+      window.removeEventListener("touchstart", onFirstInteract, { capture: true } as any)
+      window.removeEventListener("click", onFirstInteract, { capture: true } as any)
+    }
+
+    window.addEventListener("touchstart", onFirstInteract, { passive: true, capture: true })
+    window.addEventListener("click", onFirstInteract, { capture: true })
+
+    return () => {
+      window.removeEventListener("touchstart", onFirstInteract, { capture: true } as any)
+      window.removeEventListener("click", onFirstInteract, { capture: true } as any)
     }
   }, [])
 
@@ -308,41 +344,9 @@ export default function WhatWeOfferPage() {
     }
   }, [])
 
-  const ownerXFeatures: ServiceFeature[] = [
-    { icon: CalendarDays, title: "View Reservations", description: "Keep track of all upcoming and past bookings." },
-    {
-      icon: BarChart,
-      title: "Monthly Statements",
-      description: "Access detailed financial reports, past and present.",
-    },
-    { icon: Home, title: "Block Off Nights", description: "Easily reserve your property for personal use." },
-    { icon: Eye, title: "View Property Info", description: "Review photos, descriptions, and amenities lists." },
-    { icon: MessageSquare, title: "Guest Communication", description: "Oversee interactions with your guests." },
-    { icon: Sparkles, title: "Performance Reports", description: "Analyze revenue, occupancy, and other key metrics." },
-  ]
+  // Removed unused ownerXFeatures
 
-  const breezewayFeatures: ServiceFeature[] = [
-    {
-      icon: Bell,
-      title: "Cleaning Notifications",
-      description: "Receive timely updates on cleaning schedules and completions.",
-    },
-    {
-      icon: ListChecks,
-      title: "Review Cleaning Checklists",
-      description: "Ensure every clean meets our high standards.",
-    },
-    {
-      icon: Camera,
-      title: "Upload Photos of Completed Work",
-      description: "Verify cleaning quality with visual proof.",
-    },
-    {
-      icon: Wrench,
-      title: "Report Maintenance Issues",
-      description: "Quickly flag any issues with supporting photos/videos.",
-    },
-  ]
+  // Removed unused breezewayFeatures
 
   const coreServices: ServiceFeature[] = [
     {
@@ -555,20 +559,21 @@ export default function WhatWeOfferPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative flex items-center overflow-hidden bg-bnb-gray-dark py-12 wide:py-0 min-h-[calc(55vh+60px)] md:min-h-[70vh]">
+      <section className="relative flex items-center overflow-hidden bg-bnb-gray-dark py-12 wide:py-0 min-h-[calc(55vh+10px)] md:min-h-[calc(70vh-50px)]">
         <video
           ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
           className="absolute top-0 left-0 w-full h-full object-cover z-0"
           onError={(e) => {
             // eslint-disable-next-line no-console
             console.error("Hero video error", (e as any).currentTarget?.error)
           }}
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/BNB Hero.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         {/* Black overlay for contrast */}
@@ -588,8 +593,7 @@ export default function WhatWeOfferPage() {
               </div>
 
               <h1 className="mt-4 text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl text-white">
-                Unlock Your Property's Potential
-                <span className="block">with BNB Breeze</span>
+                We Built The System We Wished Existed
               </h1>
 
               <p className="mx-auto mt-5 max-w-2xl text-base text-white/80 wide:mx-0 md:text-lg">
@@ -609,12 +613,7 @@ export default function WhatWeOfferPage() {
                 >
                   See Our Process
                 </Link>
-                <div className="ml-2 flex items-center gap-2 text-xs text-white/70">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm1 15h-2v-2h2Zm0-4h-2V7h2Z" />
-                  </svg>
-                  No long-term lock-ins · Cancel anytime
-                </div>
+                
               </div>
 
               <div className="mt-6 flex items-center justify-center gap-4 wide:justify-start">
@@ -672,14 +671,7 @@ export default function WhatWeOfferPage() {
           {/* Bottom badges moved to section-level positioning */}
         </div>
 
-        {/* Bottom badges (section-scoped absolute) */}
-        <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} transition={{delay:0.15, duration:0.5}} className="pointer-events-none absolute inset-x-0 bottom-4 md:bottom-6 z-10">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 md:gap-5 px-4 md:px-6">
-            {["Commission-Only Model", "11,000+ Reviews", "All-Star Investor Club", "Owner Portal"].map((b) => (
-              <div key={b} className="pointer-events-auto rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/80 backdrop-blur-md">{b}</div>
-            ))}
-          </div>
-        </motion.div>
+        
 
       </section>
 
@@ -783,36 +775,62 @@ export default function WhatWeOfferPage() {
         </div>
       </section>
 
-      {/* Core Services Overview */}
-      <section className="relative overflow-hidden bg-bnb-blue/5 py-16 md:py-20">
+      {/* STR Needs Section (moved up) */}
+      <section className="py-16 md:py-20 bg-white relative overflow-hidden">
         <Image
-          src="/23_440-s-pelican-dr-web (17 of 33).jpg"
-          alt="South Pelican Drive house interior"
+          src="/8_440-s-pelican-dr-web (32 of 33).jpg"
+          alt="South Pelican Drive house background"
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/50" />
-        {/* Background with subtle pattern */}
-
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-10 w-32 h-32 bg-bnb-blue/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-bnb-blue/5 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-black/40" />
+        {/* Decorative background elements */}
+        <div className="absolute top-20 right-10 w-24 h-24 bg-bnb-blue/5 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-10 w-32 h-32 bg-bnb-blue/10 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <Reveal staggerChildren className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-bnb-blue/10 rounded-full mb-4">
-              <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">Our Services</span>
+            <div className="inline-block relative mb-4 rounded-full px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 ring-1 ring-white/10 shadow-lg overflow-hidden">
+              <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/25 via-white/10 to-transparent" aria-hidden="true"></span>
+              <span className="pointer-events-none absolute -top-2 -left-1 w-24 h-10 bg-white/40 rounded-full blur-2xl opacity-50" aria-hidden="true"></span>
+              <span className="relative z-10 text-white font-semibold text-sm uppercase tracking-wide">Complete Management</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-              Comprehensive Solutions for
-              <span className="text-bnb-blue"> Your Success</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+              The System Your STR Needs
             </h2>
-            <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-              At BNB Breeze, we handle every aspect of your short-term rental, so you don't have to. Discover how we
-              elevate your property and guest experiences.
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
+              A 360° Management System—Designed By Investors, For Investors—Built To Delight Guests And Maximize Your
+              Returns.
+            </h3>
+            <p className="text-lg md:text-xl text-white/80 max-w-4xl mx-auto leading-relaxed mb-12">
+              From marketing and revenue management to cleaning, maintenance, and guest experience, we handle every
+              detail so your property thrives year after year.
             </p>
+
+            {/* Management System Graphic */}
+            <Reveal staggerChildren className="flex justify-center mb-12">
+              <Image
+                src="/str-management-graphic.png"
+                alt="Comprehensive STR management system"
+                width={1200}
+                height={600}
+                className="w-full h-auto max-w-6xl"
+                priority
+              />
+            </Reveal>
+
+            {/* Bottom CTA */}
+            <Reveal staggerChildren className="text-center bg-bnb-navy/80 rounded-3xl p-8 md:p-12 border border-white/20 shadow-2xl backdrop-blur">
+              <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready To Experience The Difference?</h4>
+              <p className="text-white/85 mb-8 max-w-2xl mx-auto text-lg">
+                Let us show you how our comprehensive system can transform your property into a high-performing rental
+                that guests love and you profit from.
+              </p>
+              <Button asChild size="lg" className="bg-bnb-blue hover:bg-opacity-90 text-white px-8 py-3 rounded-full">
+                <Link href="#contact-us">See Your Property's Potential</Link>
+              </Button>
+            </Reveal>
           </Reveal>
-          <FeatureGrid features={coreServices} columns={2} />
         </div>
       </section>
 
@@ -1134,59 +1152,38 @@ export default function WhatWeOfferPage() {
         </div>
       </section>
 
-      <section className="py-16 md:py-20 bg-white relative overflow-hidden">
+      {/* Core Services Overview (moved down) */}
+      <section className="relative overflow-hidden bg-bnb-blue/5 py-16 md:py-20">
         <Image
-          src="/8_440-s-pelican-dr-web (32 of 33).jpg"
-          alt="South Pelican Drive house background"
+          src="/23_440-s-pelican-dr-web (17 of 33).jpg"
+          alt="South Pelican Drive house interior"
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/40" />
-        {/* Decorative background elements */}
-        <div className="absolute top-20 right-10 w-24 h-24 bg-bnb-blue/5 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 left-10 w-32 h-32 bg-bnb-blue/10 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Background with subtle pattern */}
+
+        {/* Decorative elements */}
+        <div className="absolute top-10 left-10 w-32 h-32 bg-bnb-blue/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-40 h-40 bg-bnb-blue/5 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <Reveal staggerChildren className="text-center mb-12">
-            <div className="inline-block px-4 py-2 bg-bnb-blue/10 rounded-full mb-4">
-              <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">Complete Management</span>
+            <div className="inline-block relative mb-4 rounded-full px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 ring-1 ring-white/10 shadow-lg overflow-hidden">
+              <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/25 via-white/10 to-transparent" aria-hidden="true"></span>
+              <span className="pointer-events-none absolute -top-2 -left-1 w-24 h-10 bg-white/40 rounded-full blur-2xl opacity-50" aria-hidden="true"></span>
+              <span className="relative z-10 text-white font-semibold text-sm uppercase tracking-wide">Our Services</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              The System Your STR Needs
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+              Comprehensive Solutions for
+              <span className="text-white"> Your Success</span>
             </h2>
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
-              A 360° Management System—Designed By Investors, For Investors—Built To Delight Guests And Maximize Your
-              Returns.
-            </h3>
-            <p className="text-lg md:text-xl text-white/80 max-w-4xl mx-auto leading-relaxed mb-12">
-              From marketing and revenue management to cleaning, maintenance, and guest experience, we handle every
-              detail so your property thrives year after year.
+            <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+              At BNB Breeze, we handle every aspect of your short-term rental, so you don't have to. Discover how we
+              elevate your property and guest experiences.
             </p>
-
-            {/* Management System Graphic */}
-            <Reveal staggerChildren className="flex justify-center mb-12">
-              <Image
-                src="/str-management-graphic.png"
-                alt="Comprehensive STR management system"
-                width={1200}
-                height={600}
-                className="w-full h-auto max-w-6xl"
-                priority
-              />
-            </Reveal>
-
-            {/* Bottom CTA */}
-            <Reveal staggerChildren className="text-center bg-bnb-navy/80 rounded-3xl p-8 md:p-12 border border-white/20 shadow-2xl backdrop-blur">
-              <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready To Experience The Difference?</h4>
-              <p className="text-white/85 mb-8 max-w-2xl mx-auto text-lg">
-                Let us show you how our comprehensive system can transform your property into a high-performing rental
-                that guests love and you profit from.
-              </p>
-              <Button asChild size="lg" className="bg-bnb-blue hover:bg-opacity-90 text-white px-8 py-3 rounded-full">
-                <Link href="#contact-us">See Your Property's Potential</Link>
-              </Button>
-            </Reveal>
           </Reveal>
+          <FeatureGrid features={coreServices} columns={2} />
         </div>
       </section>
 
@@ -1255,46 +1252,133 @@ export default function WhatWeOfferPage() {
         </div>
       </section>
 
-      {/* Our Process Section */}
-      <section id="process-startup" className="py-16 md:py-20 bg-white scroll-mt-24">
+      {/* Our Process Section - Horizontal Numbered Layout */}
+      <section id="process-startup" className="py-20 md:py-28 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <SectionHeader
             title="Our Proven 3-Step Process"
             subtitle="From initial setup to ongoing management, we've perfected a seamless process to make your hosting journey effortless and profitable."
           />
-          <div className="space-y-12 md:space-y-20 mt-12">
-            <ServiceDetailCard
-              id="process-startup"
-              icon={Rocket}
-              title="Step 1: Property Setup & Staging"
-              description="The STR game can look different for different owners. For example, you may wish to design your own unique STR, you may already have a home that is sitting empty and you'd like to utilize the asset better, or perhaps you want some land to hunt but need to justify the purchase with some cash flow and would like to take advantage of STRs to do so. In any of these instances, we can help. See Staging Your Home below for details on how we can help you set up your rental property."
-              imageUrl="/step1-house-exterior.png"
-              imageAlt="Luxury modern home with pool and outdoor living space ready for short-term rental"
-              imagePosition="left"
-              className="!py-0"
-            />
-            <ServiceDetailCard
-              id="process-listing"
-              icon={Megaphone}
-              title="Step 2: Professional Listing & Marketing"
-              description="In addition to setting up the actual rental page on multiple short term rental platforms, we utilize several third party software programs to help run the management of your listing smoothly. This includes pricing tools, tax remitting, etc. It takes time to get your property listed. If staging a home, we will do this step while waiting on items to be shipped. If listing a home already staged, please note, it does take time for this step to be completed."
-              imageUrl="/listing-graphic.png"
-              imageAlt="Professional Airbnb listing showing Smoky Mountain property"
-              imagePosition="right"
-              className="!py-0"
-              imageHasCard={false}
-              imageContainerClassName="w-11/12 mx-auto"
-            />
-            <ServiceDetailCard
-              id="process-management"
-              icon={ClipboardList}
-              title="Step 3: Hands-Free Management"
-              description="We do try to make the management process as hands free for you as possible. Once we have the property listed, there is not anything for you to do aside from the property maintenance and upkeep. Although we are on the road a lot, our home office is on the right. It's a great space to come back to and get things done!"
-              imageUrl="/step3-office-space.png"
-              imageAlt="BNB Breeze office space with Living the Dream wall sign"
-              imagePosition="left"
-              className="!py-0"
-            />
+
+          {/* Numbered connector row to match reference */}
+          <div className="relative mx-auto max-w-7xl">
+            <div className="hidden md:flex items-center justify-center mt-2">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.5 }}
+                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.22 } } }}
+                className="flex items-center w-full max-w-5xl gap-4 md:gap-6"
+              >
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                  className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
+                >
+                  1
+                </motion.div>
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
+                  transition={{ duration: 0.5 }}
+                  className="h-[2px] bg-bnb-blue/30 flex-1 rounded-full origin-left"
+                />
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                  className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
+                >
+                  2
+                </motion.div>
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
+                  transition={{ duration: 0.5 }}
+                  className="h-[2px] bg-bnb-blue/30 flex-1 rounded-full origin-left"
+                />
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                  className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
+                >
+                  3
+                </motion.div>
+              </motion.div>
+            </div>
+            <div className="grid gap-12 md:grid-cols-3 md:gap-10 mt-8 md:mt-10">
+              {/* Step 1 */}
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: 0 }}
+                className="relative text-center"
+              >
+                {/* Mobile number */}
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                  className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-bnb-blue text-white text-base font-bold shadow-md md:hidden"
+                >
+                  1
+                </motion.div>
+                {/* Image card */}
+                <div className="mt-6 relative w-full h-48 sm:h-56 md:h-64 rounded-2xl overflow-hidden shadow-xl border border-white/20 bg-white">
+                  <Image src="/step1-house-exterior.png" alt="Step 1 property setup" fill className="object-cover" />
+                </div>
+                {/* Text block */}
+                <div className="mt-4 text-left px-1 max-w-prose mx-auto">
+                  <h4 className="text-base md:text-lg font-semibold text-bnb-navy">Step 1: Property Setup & Staging</h4>
+                  <p className="mt-2 text-sm md:text-base text-bnb-gray-dark">We tailor setup to your situation, whether designing, staging, or repurposing your property (even new land use) to get it rental ready. We handle the staging details for a smooth start.</p>
+                </div>
+              </motion.div>
+
+              {/* Step 2 */}
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: 0.44 }}
+                className="relative text-center"
+              >
+                {/* Mobile number */}
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                  className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-bnb-blue text-white text-base font-bold shadow-md md:hidden"
+                >
+                  2
+                </motion.div>
+                {/* Image only (transparent PNG) */}
+                <div className="mt-6 relative w-full h-48 sm:h-56 md:h-64 flex items-center justify-center">
+                  <Image src="/listing-graphic.png" alt="Step 2 listing and marketing" fill className="object-contain" />
+                </div>
+                {/* Text block */}
+                <div className="mt-4 text-left px-1 max-w-prose mx-auto">
+                  <h4 className="text-base md:text-lg font-semibold text-bnb-navy">Step 2: Listing & Marketing</h4>
+                  <p className="mt-2 text-sm md:text-base text-bnb-gray-dark">We build listings across platforms and run professional tools for pricing, taxes, and operations. Listing takes time; we progress this during staging or after if your home is already staged.</p>
+                </div>
+              </motion.div>
+
+              {/* Step 3 */}
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: 0.88 }}
+                className="relative text-center"
+              >
+                {/* Mobile number */}
+                <motion.div
+                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                  className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-bnb-blue text-white text-base font-bold shadow-md md:hidden"
+                >
+                  3
+                </motion.div>
+                {/* Image card */}
+                <div className="mt-6 relative w-full h-48 sm:h-56 md:h-64 rounded-2xl overflow-hidden shadow-xl border border-white/20 bg-white">
+                  <Image src="/step3-office-space.png" alt="Step 3 hands-free management" fill className="object-cover" />
+                </div>
+                {/* Text block */}
+                <div className="mt-4 text-left px-1 max-w-prose mx-auto">
+                  <h4 className="text-base md:text-lg font-semibold text-bnb-navy">Step 3: Hands-Free Management</h4>
+                  <p className="mt-2 text-sm md:text-base text-bnb-gray-dark">Once live, we manage day-to-day operations so you mainly handle basic property upkeep. Our team runs everything to keep it efficient and worry free.</p>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -1302,12 +1386,12 @@ export default function WhatWeOfferPage() {
       {/* Scope of Service Section */}
       <section className="relative bg-bnb-blue/5 py-16 md:py-20">
         <Image
-          src="/11_440-s-pelican-dr-web (33 of 33).jpg"
-          alt="South Pelican Drive house background"
+          src="/32_440-s-pelican-dr-web (28 of 33).jpg"
+          alt="Pelican Drive modern home exterior"
           fill
-          className="object-cover"
+          className="object-cover object-[center_35%]"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/35" />
         <div className="relative container mx-auto px-4 md:px-6">
           <SectionHeader
             title="Clear Expectations: What's Included & What's Not"
@@ -1315,73 +1399,8 @@ export default function WhatWeOfferPage() {
             titleClassName="text-white"
             subtitleClassName="text-white/80"
           />
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto mt-12">
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-bnb-gray-light/20">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                  <CheckCircle2 className="w-6 h-6 text-green-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-bnb-navy">What We Do</h3>
-              </div>
-              <ul className="space-y-3 text-bnb-gray-dark">
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Market your property across all major channels.</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Implement dynamic pricing and listing optimization.</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Manage all guest communications and scheduling.</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Handle professional cleanings and property inspections.</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Collect and remit taxes, and manage permits.</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Coordinate small maintenance and reorder supplies.</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                  <span>Process damage claims and send you a monthly check.</span>
-                </li>
-              </ul>
-            </div>
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-bnb-gray-light/20">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                  <XCircle className="w-6 h-6 text-red-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-bnb-navy">What We Don't Do</h3>
-              </div>
-              <ul className="space-y-3 text-bnb-gray-dark">
-                <li className="flex items-start">
-                  <XCircle className="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" />
-                  <span>Manage long-term rentals or property utilities.</span>
-                </li>
-                <li className="flex items-start">
-                  <XCircle className="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" />
-                  <span>Handle general yard maintenance or home upkeep.</span>
-                </li>
-                <li className="flex items-start">
-                  <XCircle className="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" />
-                  <span>Perform large-scale repairs (e.g., broken A/C units).</span>
-                </li>
-                <li className="flex items-start">
-                  <span>
-                    We do, however, provide recommendations and coordinate with trusted vendors for any major work
-                    needed.
-                  </span>
-                </li>
-              </ul>
-            </div>
+          <div className="max-w-6xl mx-auto mt-12">
+            <IncludedChart />
           </div>
         </div>
       </section>
@@ -1407,47 +1426,12 @@ export default function WhatWeOfferPage() {
 
       {/* All-Star Investor Club CTA */}
       <section id="investor-club" className="py-16 md:py-20 bg-bnb-blue/5 relative overflow-hidden">
-        {/* Add subtle decorative elements */}
+        {/* Decorative elements */}
         <div className="absolute top-10 right-10 w-24 h-24 bg-bnb-blue/10 rounded-full blur-2xl"></div>
         <div className="absolute bottom-10 left-10 w-32 h-32 bg-bnb-blue/5 rounded-full blur-3xl"></div>
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center bg-white/80 backdrop-blur-sm text-bnb-blue px-4 py-2 rounded-full mb-6 shadow-sm">
-              <Award className="w-4 h-4 mr-2" />
-              <span className="font-medium text-sm">All-Star Investor Club</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-bnb-navy">
-              3+ Properties? Join Our Exclusive Club
-            </h2>
-            <p className="text-bnb-gray-dark mb-8 max-w-2xl mx-auto">
-              Premium support, discounted rates, and hands-off management for serious investors.
-            </p>
-
-            {/* Quick Benefits */}
-            <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm">
-              <div className="flex items-center text-bnb-gray-dark">
-                <DollarSign className="w-4 h-4 mr-2 text-bnb-blue" />
-                <span>Reduced Commission</span>
-                  </div>
-              <div className="flex items-center text-bnb-gray-dark">
-                <Users className="w-4 h-4 mr-2 text-bnb-blue" />
-                <span>Dedicated Support</span>
-                  </div>
-              <div className="flex items-center text-bnb-gray-dark">
-                <BarChart className="w-4 h-4 mr-2 text-bnb-blue" />
-                <span>Market Insights</span>
-                </div>
-              <div className="flex items-center text-bnb-gray-dark">
-                <Award className="w-4 h-4 mr-2 text-bnb-blue" />
-                <span>VIP Treatment</span>
-                  </div>
-                </div>
-
-            <Button asChild size="lg" className="bg-bnb-blue hover:bg-opacity-90 text-white px-6 py-2">
-              <Link href="#contact-us">Join Now</Link>
-            </Button>
-          </div>
+        <div className="relative z-10">
+          <InvestorClubSection />
         </div>
       </section>
 
@@ -1585,12 +1569,12 @@ export default function WhatWeOfferPage() {
               {/* Phone Number */}
               <div className="text-center mt-8 pt-8 border-t border-bnb-blue/20">
                 <div className="flex items-center justify-center space-x-2">
-                  <svg className="w-5 h-5 text-bnb-blue" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                   </svg>
                   <a
                     href="tel:+18659273393"
-                    className="text-xl md:text-2xl font-bold text-bnb-blue hover:text-bnb-blue/80 transition-colors"
+                    className="text-xl md:text-2xl font-bold text-white hover:text-white/80 transition-colors"
                   >
                     +1 (865) 927-3393
                   </a>
