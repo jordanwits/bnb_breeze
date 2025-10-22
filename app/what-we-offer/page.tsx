@@ -42,6 +42,7 @@ import {
 import { cn } from "@/lib/utils"
 import InvestorClubSection from "@/components/investor-club-section"
 import IncludedChart from "@/components/included-chart"
+import ServicesStepper from "@/components/services-stepper"
 
 interface ServiceFeature {
   icon: React.ElementType
@@ -146,21 +147,31 @@ const ServiceDetailCard: React.FC<{
 )
 
 const FeatureGrid: React.FC<{ features: ServiceFeature[]; columns?: 2 | 3 }> = ({ features, columns = 2 }) => (
-  <Reveal staggerChildren className={`grid gap-6 sm:gap-8 ${columns === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2"} mt-8`}>
-    {features.map((feature, index) => (
-      <div key={index} className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-lg border border-white/20">
-        <div>
-          {/* Enhanced icon with background */}
-          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-bnb-blue to-bnb-blue/80 rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
-            <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-          </div>
+  <div className={`${columns === 2 ? "mx-auto max-w-[820px]" : ""}`}>
+    <Reveal staggerChildren className={`grid gap-y-6 gap-x-4 sm:gap-y-8 sm:gap-x-6 ${columns === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2"} mt-8 place-items-center`}>
+      {features.map((feature, index) => (
+        <div
+          key={index}
+          className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/12 p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.24)] ring-1 ring-white/10 backdrop-blur-xl w-fit mx-auto"
+        >
+          {/* Liquid glass accents */}
+          <div className="pointer-events-none absolute inset-x-0 -top-6 h-16 bg-gradient-to-b from-white/40 via-white/10 to-transparent" />
+          <div className="pointer-events-none absolute -top-12 -left-12 h-40 w-40 rounded-full bg-bnb-blue/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-bnb-blue/10 blur-3xl" />
 
-          <h4 className="font-bold text-lg sm:text-xl text-bnb-navy mb-3">{feature.title}</h4>
-          <p className="text-bnb-gray-medium leading-relaxed text-sm sm:text-base">{feature.description}</p>
+          <div className="relative text-center max-w-[360px] mx-auto">
+            {/* Enhanced icon with background */}
+            <div className="w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-bnb-blue to-bnb-blue/80 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] mx-auto">
+              <feature.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+            </div>
+
+            <h4 className="font-bold text-lg sm:text-xl text-white mb-3">{feature.title}</h4>
+            <p className="text-white/80 leading-relaxed text-sm sm:text-base">{feature.description}</p>
+          </div>
         </div>
-      </div>
-    ))}
-  </Reveal>
+      ))}
+    </Reveal>
+  </div>
 )
 
 // Simple, consistent-width stat card used by the marquee
@@ -755,22 +766,45 @@ export default function WhatWeOfferPage() {
           </Reveal>
 
           {/* Revenue Projection CTA */}
-          <Reveal staggerChildren className="text-center bg-gradient-to-br from-bnb-blue/5 to-bnb-blue/10 rounded-3xl p-8 md:p-12 border border-bnb-blue/20">
-            <div className="flex justify-center mb-4">
-              <svg className="w-8 h-8 text-bnb-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
+          <Reveal staggerChildren className="relative overflow-hidden rounded-3xl p-8 md:p-12 border border-bnb-blue/20 shadow-[0_8px_30px_rgba(0,0,0,0.12)] min-h-[360px] md:min-h-[440px] flex items-center justify-center">
+            {/* Background image */}
+            <Image src="/ProjectionGraph.jpg" alt="Projection graph background" fill className="object-cover object-[center_25%]" />
+            {/* Liquid glass overlay */}
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-[4px]" aria-hidden></div>
+            <div className="pointer-events-none absolute inset-x-0 -top-8 h-24 bg-gradient-to-b from-white/40 via-white/10 to-transparent" aria-hidden></div>
+            <div className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-bnb-blue/20 blur-3xl" aria-hidden></div>
+            <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-bnb-blue/10 blur-3xl" aria-hidden></div>
+            {/* Subtle moving sheen */}
+            <motion.div
+              className="pointer-events-none absolute -inset-y-10 -left-1/3 w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/35 to-transparent"
+              initial={{ x: "-40%" }}
+              whileInView={{ x: ["-40%", "140%"] }}
+              viewport={{ once: false, amount: 0.6 }}
+              transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
+              aria-hidden
+            />
+            {/* Content */}
+            <div className="relative z-10 text-center">
+              <div className="inline-block rounded-2xl bg-white px-6 py-5 border border-white/30 shadow-md max-w-3xl mx-auto">
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <svg className="w-7 h-7 text-bnb-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  <h4 className="text-2xl md:text-3xl font-bold text-bnb-navy">See What Your Home Could Earn</h4>
+                </div>
+                <p className="text-bnb-blue text-lg md:text-xl font-semibold mb-3">
+                  Get A Free Revenue Projection And See How Our System Maximizes Performance For Homes Like Yours.
+                </p>
+                <p className="text-bnb-gray-dark">
+                  From new purchases to established rentals, we'll show you the numbers before you commit.
+                </p>
+                <div className="mt-5">
+                  <Button asChild size="lg" className="bg-bnb-blue hover:bg-opacity-90 text-white px-8 py-3 rounded-full">
+                    <Link href="#contact-us">Get Free Revenue Projection</Link>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <h4 className="text-2xl md:text-3xl font-bold text-bnb-navy mb-4">See What Your Home Could Earn</h4>
-            <p className="text-bnb-blue text-lg md:text-xl font-semibold mb-4 max-w-3xl mx-auto">
-              Get A Free Revenue Projection And See How Our System Maximizes Performance For Homes Like Yours.
-            </p>
-            <p className="text-bnb-gray-dark mb-8 max-w-2xl mx-auto">
-              From new purchases to established rentals, we'll show you the numbers before you commit.
-            </p>
-            <Button asChild size="lg" className="bg-bnb-blue hover:bg-opacity-90 text-white px-8 py-3 rounded-full">
-              <Link href="#contact-us">Get Free Revenue Projection</Link>
-            </Button>
           </Reveal>
         </div>
       </section>
@@ -807,16 +841,9 @@ export default function WhatWeOfferPage() {
               detail so your property thrives year after year.
             </p>
 
-            {/* Management System Graphic */}
-            <Reveal staggerChildren className="flex justify-center mb-12">
-              <Image
-                src="/str-management-graphic.png"
-                alt="Comprehensive STR management system"
-                width={1200}
-                height={600}
-                className="w-full h-auto max-w-6xl"
-                priority
-              />
+            {/* Management System Stepper (replaces static graphic) */}
+            <Reveal staggerChildren className="mb-12">
+              <ServicesStepper />
             </Reveal>
 
             {/* Bottom CTA */}
@@ -1143,7 +1170,7 @@ export default function WhatWeOfferPage() {
               We Manage Your Vacation Rental From Start To Finish — Across:
             </h3>
             <div className="flex justify-center mb-8 px-4">
-              <img src="/platform-logos.png" alt="" className="max-w-full h-auto max-w-[900px]" />
+              <img src="/PartnerGraphic.png" alt="Partner logos" className="max-w-full h-auto max-w-[900px]" />
             </div>
             <p className="text-lg text-bnb-gray-dark max-w-2xl mx-auto">
               and more — so you can earn more without the headache.
@@ -1176,7 +1203,7 @@ export default function WhatWeOfferPage() {
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
               Comprehensive Solutions for
-              <span className="text-white"> Your Success</span>
+              <span className="text-bnb-blue"> Your Success</span>
             </h2>
             <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
               At BNB Breeze, we handle every aspect of your short-term rental, so you don't have to. Discover how we
@@ -1270,34 +1297,109 @@ export default function WhatWeOfferPage() {
                 variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.22 } } }}
                 className="flex items-center w-full max-w-5xl gap-4 md:gap-6"
               >
-                <motion.div
-                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
-                  className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
-                >
-                  1
-                </motion.div>
-                <motion.div
-                  variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
-                  transition={{ duration: 0.5 }}
-                  className="h-[2px] bg-bnb-blue/30 flex-1 rounded-full origin-left"
-                />
-                <motion.div
-                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
-                  className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
-                >
-                  2
-                </motion.div>
-                <motion.div
-                  variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
-                  transition={{ duration: 0.5 }}
-                  className="h-[2px] bg-bnb-blue/30 flex-1 rounded-full origin-left"
-                />
-                <motion.div
-                  variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
-                  className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
-                >
-                  3
-                </motion.div>
+                {/* Step 1 with glow */}
+                <div className="relative">
+                  <motion.div
+                    className="absolute -inset-2 rounded-full bg-bnb-blue/30 blur-md"
+                    variants={{
+                      hidden: { opacity: 0, scale: 1 },
+                      visible: {
+                        opacity: [0, 1, 0, 0],
+                        scale: [1, 1.15, 1, 1],
+                        transition: { duration: 8, ease: "linear", repeat: Infinity, times: [0, 0.08, 0.16, 1] },
+                      },
+                    }}
+                    aria-hidden
+                  />
+                  <motion.div
+                    variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                    className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
+                  >
+                    1
+                  </motion.div>
+                </div>
+                {/* Line 1 with traveling light */}
+                <div className="relative flex-1">
+                  <motion.div
+                    variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
+                    transition={{ duration: 0.5 }}
+                    className="h-[2px] w-full bg-bnb-blue/30 rounded-full origin-left"
+                  />
+                  <motion.div
+                    className="absolute top-1/2 -translate-y-1/2 left-0 h-2 w-2 rounded-full bg-bnb-blue/80 shadow-[0_0_14px_rgba(59,130,246,0.85)]"
+                    variants={{
+                      hidden: { left: "0%", opacity: 0 },
+                      visible: {
+                        left: ["0%", "0%", "100%", "100%"],
+                        opacity: [0, 1, 1, 0],
+                        transition: { duration: 8, ease: "linear", repeat: Infinity, times: [0, 0.10, 0.25, 1] },
+                      },
+                    }}
+                    aria-hidden
+                  />
+                </div>
+                {/* Step 2 with glow */}
+                <div className="relative">
+                  <motion.div
+                    className="absolute -inset-2 rounded-full bg-bnb-blue/30 blur-md"
+                    variants={{
+                      hidden: { opacity: 0, scale: 1 },
+                      visible: {
+                        opacity: [0, 0, 1, 0, 0],
+                        scale: [1, 1, 1.15, 1, 1],
+                        transition: { duration: 8, ease: "linear", repeat: Infinity, times: [0, 0.25, 0.33, 0.41, 1] },
+                      },
+                    }}
+                    aria-hidden
+                  />
+                  <motion.div
+                    variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                    className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
+                  >
+                    2
+                  </motion.div>
+                </div>
+                {/* Line 2 with traveling light */}
+                <div className="relative flex-1">
+                  <motion.div
+                    variants={{ hidden: { opacity: 0, scaleX: 0 }, visible: { opacity: 1, scaleX: 1 } }}
+                    transition={{ duration: 0.5 }}
+                    className="h-[2px] w-full bg-bnb-blue/30 rounded-full origin-left"
+                  />
+                  <motion.div
+                    className="absolute top-1/2 -translate-y-1/2 left-0 h-2 w-2 rounded-full bg-bnb-blue/80 shadow-[0_0_14px_rgba(59,130,246,0.85)]"
+                    variants={{
+                      hidden: { left: "0%", opacity: 0 },
+                      visible: {
+                        left: ["0%", "0%", "100%", "100%"],
+                        opacity: [0, 0, 1, 0],
+                        transition: { duration: 8, ease: "linear", repeat: Infinity, times: [0, 0.35, 0.50, 1] },
+                      },
+                    }}
+                    aria-hidden
+                  />
+                </div>
+                {/* Step 3 with glow */}
+                <div className="relative">
+                  <motion.div
+                    className="absolute -inset-2 rounded-full bg-bnb-blue/30 blur-md"
+                    variants={{
+                      hidden: { opacity: 0, scale: 1 },
+                      visible: {
+                        opacity: [0, 0, 0, 1, 0],
+                        scale: [1, 1, 1, 1.15, 1],
+                        transition: { duration: 8, ease: "linear", repeat: Infinity, times: [0, 0.50, 0.62, 0.72, 1] },
+                      },
+                    }}
+                    aria-hidden
+                  />
+                  <motion.div
+                    variants={{ hidden: { opacity: 0, scale: 0.7, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }}
+                    className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-bnb-blue text-white font-bold shadow-md ring-2 ring-white"
+                  >
+                    3
+                  </motion.div>
+                </div>
               </motion.div>
             </div>
             <div className="grid gap-12 md:grid-cols-3 md:gap-10 mt-8 md:mt-10">
@@ -1462,7 +1564,22 @@ export default function WhatWeOfferPage() {
               <h3 className="text-xl md:text-2xl font-semibold text-white/90 mb-4 leading-tight">
                 Get In Touch With Our Team And Book A Free Strategy Call To See How Much Your Home Could Earn
               </h3>
-              <p className="text-lg text-white/80">Let us prove it to you.</p>
+              <div className="mt-2 flex justify-center">
+                <span className="relative inline-flex items-center rounded-full bg-bnb-navy/80 px-5 py-2.5 border border-white/20 text-white/90 backdrop-blur text-base md:text-lg overflow-hidden shadow-[0_4px_18px_rgba(0,0,0,0.16)]">
+                  <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/20 via-white/10 to-transparent" aria-hidden></span>
+                  <span className="pointer-events-none absolute -top-2 -left-2 w-16 h-8 bg-bnb-blue/30 rounded-full blur-2xl opacity-50" aria-hidden></span>
+                  <span className="pointer-events-none absolute -bottom-2 -right-2 w-16 h-8 bg-bnb-blue/20 rounded-full blur-2xl opacity-50" aria-hidden></span>
+                  <motion.span
+                    className="pointer-events-none absolute -inset-y-4 -left-1/3 w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/35 to-transparent"
+                    initial={{ x: "-40%" }}
+                    whileInView={{ x: ["-40%", "140%"] }}
+                    viewport={{ once: false, amount: 0.6 }}
+                    transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
+                    aria-hidden
+                  />
+                  <span className="relative z-10">Let us prove it to you.</span>
+                </span>
+              </div>
             </div>
 
             {/* Contact Form */}
