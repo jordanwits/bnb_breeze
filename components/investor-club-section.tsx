@@ -22,7 +22,16 @@ export default function InvestorClubSection() {
           <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">All-Star Investor Club</span>
         </div>
 
-        <h2 className="mt-6 text-3xl font-bold tracking-tight text-bnb-navy md:text-4xl">3+ Properties? Join Our Exclusive Club</h2>
+        <h2 className="mt-6 text-3xl font-bold tracking-tight text-bnb-navy md:text-4xl">
+          <span className="text-bnb-blue">3+ Properties</span>? Join Our Exclusive Club
+          <motion.span
+            className="ml-2 inline-block align-middle text-bnb-blue drop-shadow-[0_0_12px_rgba(59,130,246,0.75)]"
+            animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.9, 1, 0.9] }}
+            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Sparkles className="h-9 w-9" />
+          </motion.span>
+        </h2>
         <p className="mx-auto mt-3 max-w-2xl text-bnb-gray-dark">Premium support, discounted rates, and hands-off management for serious investors.</p>
       </motion.div>
 

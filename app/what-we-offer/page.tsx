@@ -42,6 +42,7 @@ import {
 import { cn } from "@/lib/utils"
 import InvestorClubSection from "@/components/investor-club-section"
 import IncludedChart from "@/components/included-chart"
+import ClearExpectationsSplitGlass from "@/components/clear-expectations-split-glass"
 import ServicesStepper from "@/components/services-stepper"
 
 interface ServiceFeature {
@@ -1493,16 +1494,24 @@ export default function WhatWeOfferPage() {
           fill
           className="object-cover object-[center_35%]"
         />
-        <div className="absolute inset-0 bg-black/35" />
+        <div className="absolute inset-0 bg-black/50" />
         <div className="relative container mx-auto px-4 md:px-6">
+          {/* Pill above the section header */}
+          <div className="text-center mb-4">
+            <div className="inline-block relative rounded-full px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 ring-1 ring-white/10 shadow-lg overflow-hidden">
+              <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/25 via-white/10 to-transparent" aria-hidden="true"></span>
+              <span className="pointer-events-none absolute -top-2 -left-1 w-24 h-10 bg-white/40 rounded-full blur-2xl opacity-50" aria-hidden="true"></span>
+              <span className="relative z-10 text-white font-semibold text-sm uppercase tracking-wide">Clarity. Accountability. Zero guesswork.</span>
+            </div>
+          </div>
           <SectionHeader
-            title="Clear Expectations: What's Included & What's Not"
-            subtitle="Transparency is key to a successful partnership. Here's exactly what you can expect from us and what remains your responsibility."
+            title="What We Handle vs. What You Handle"
+            subtitle="Straightforward scope so there are no surprises—here’s how we split the work to keep your rental running smoothly."
             titleClassName="text-white"
             subtitleClassName="text-white/80"
           />
-          <div className="max-w-6xl mx-auto mt-12">
-            <IncludedChart />
+          <div className="max-w-6xl mx-auto mt-8 md:mt-12">
+            <ClearExpectationsSplitGlass />
           </div>
         </div>
       </section>
@@ -1524,7 +1533,22 @@ export default function WhatWeOfferPage() {
         className="bg-white"
         titleClassName="text-3xl sm:text-4xl md:text-5xl font-semibold text-bnb-navy mb-4"
         iconClassName="w-12 h-12 text-bnb-blue mr-4"
-      />
+      >
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="inline-block relative rounded-full px-3 py-1.5 bg-bnb-blue/10 backdrop-blur-sm border border-bnb-blue/30 ring-1 ring-bnb-blue/10 overflow-hidden">
+            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/40 via-white/10 to-transparent" aria-hidden></span>
+            <span className="relative z-10 text-bnb-blue font-semibold text-xs uppercase tracking-wide">Dynamic Pricing</span>
+          </span>
+          <span className="inline-block relative rounded-full px-3 py-1.5 bg-bnb-blue/10 backdrop-blur-sm border border-bnb-blue/30 ring-1 ring-bnb-blue/10 overflow-hidden">
+            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/40 via-white/10 to-transparent" aria-hidden></span>
+            <span className="relative z-10 text-bnb-blue font-semibold text-xs uppercase tracking-wide">Listing Optimization</span>
+          </span>
+          <span className="inline-block relative rounded-full px-3 py-1.5 bg-bnb-blue/10 backdrop-blur-sm border border-bnb-blue/30 ring-1 ring-bnb-blue/10 overflow-hidden">
+            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/40 via-white/10 to-transparent" aria-hidden></span>
+            <span className="relative z-10 text-bnb-blue font-semibold text-xs uppercase tracking-wide">Aligned Incentives</span>
+          </span>
+        </div>
+      </ServiceDetailCard>
 
       {/* All-Star Investor Club CTA */}
       <section id="investor-club" className="py-16 md:py-20 bg-bnb-blue/5 relative overflow-hidden">
@@ -1553,14 +1577,14 @@ export default function WhatWeOfferPage() {
           <div className="max-w-4xl mx-auto">
             {/* Header */}
           <div className="text-center mb-12">
-              <div className="flex items-center justify-center mb-6">
-                <div className="w-8 h-8 bg-bnb-blue rounded-full flex items-center justify-center mr-3">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-3 mb-6">
+                <div className="w-9 h-9 bg-bnb-blue rounded-full flex items-center justify-center mr-0 md:mr-3 mb-1 md:mb-0">
                   <CheckCircle2 className="w-5 h-5 text-white" />
-            </div>
+                </div>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                   Your Next Step To Higher Returns
-            </h2>
-          </div>
+                </h2>
+              </div>
               <h3 className="text-xl md:text-2xl font-semibold text-white/90 mb-4 leading-tight">
                 Get In Touch With Our Team And Book A Free Strategy Call To See How Much Your Home Could Earn
               </h3>
@@ -1683,20 +1707,15 @@ export default function WhatWeOfferPage() {
               </div>
               </form>
 
-              {/* Phone Number */}
-              <div className="text-center mt-8 pt-8 border-t border-bnb-blue/20">
-                <div className="flex items-center justify-center space-x-2">
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
-                  <a
-                    href="tel:+18659273393"
-                    className="text-xl md:text-2xl font-bold text-white hover:text-white/80 transition-colors"
-                  >
-                    +1 (865) 927-3393
-                  </a>
-            </div>
-
+              {/* Phone Card (number only) */}
+              <div className="mt-8 text-center">
+                <a
+                  href="tel:+18659273393"
+                  className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 backdrop-blur px-4 py-2 text-white shadow-lg hover:bg-white/15 transition"
+                  aria-label="Call BNB Breeze at +1 (865) 927-3393"
+                >
+                  <span className="text-xl md:text-2xl font-bold tracking-tight">+1 (865) 927-3393</span>
+                </a>
               </div>
             </div>
           </div>
