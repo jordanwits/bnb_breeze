@@ -655,7 +655,7 @@ export default function WhatWeOfferPage() {
                   {[{ label: "Total Reservations", value: "+14K" },{ label: "Guest Nights", value: "+67K" },{ label: "5-Star Reviews", value: "+10K" },{ label: "Portfolio Worth", value: "+$100M" }].map((s) => (
                     <div
                       key={s.label}
-                      className="rounded-xl bg-white/10 ring-1 ring-white/15 px-4 md:px-5 py-4 md:py-5 text-center flex flex-col items-center justify-center min-h-[100px] md:min-h-[120px]"
+                      className="rounded-xl bg-bnb-blue/30 ring-1 ring-bnb-blue/30 px-4 md:px-5 py-4 md:py-5 text-center flex flex-col items-center justify-center min-h-[100px] md:min-h-[120px]"
                     >
                       <div
                         className={cn(
@@ -670,10 +670,13 @@ export default function WhatWeOfferPage() {
                   ))}
                 </div>
 
-                {/* Small badges */}
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-white/75">
+                {/* Small labels (non-button look) */}
+                <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-white/75">
                   {["Start Up","List","Manage","$$$"] .map((step, i) => (
-                    <span key={i} className="rounded-full bg-white/10 px-2 py-1 ring-1 ring-white/15">{step}</span>
+                    <span key={i} className="inline-flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                      <span className="uppercase tracking-wide">{step}</span>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -697,9 +700,6 @@ export default function WhatWeOfferPage() {
                 Investor-Driven STR Management
               </span>
             </div>
-            <h3 className="text-3xl md:text-4xl font-bold text-bnb-navy mb-6 leading-tight">
-              We Built The System We Wished Existed
-            </h3>
             <p className="text-lg text-bnb-gray-dark max-w-4xl mx-auto leading-relaxed">
               A short-term rental management platform designed by investors, for investors. At BNB Breeze, every home is
               treated like our own—because we're owners too. We've spent years perfecting the art and science of
@@ -759,20 +759,22 @@ export default function WhatWeOfferPage() {
                 href="https://www.youtube.com/watch?v=qB78JRjKyxI"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-bnb-blue hover:text-bnb-blue/80 font-semibold transition-colors"
+                className="inline-flex items-center rounded-full bg-bnb-blue px-6 py-3 text-sm font-semibold text-white hover:bg-opacity-90"
               >
-                🎬 CLICK HERE TO WATCH
+                Click Here To Watch
               </a>
             </div>
           </Reveal>
 
           {/* Revenue Projection CTA */}
-          <Reveal staggerChildren className="relative overflow-hidden rounded-3xl p-8 md:p-12 border border-bnb-blue/20 shadow-[0_8px_30px_rgba(0,0,0,0.12)] min-h-[360px] md:min-h-[440px] flex items-center justify-center">
-            {/* Background image */}
-            <Image src="/ProjectionGraph.jpg" alt="Projection graph background" fill className="object-cover object-[center_25%]" />
-            {/* Liquid glass overlay */}
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-[4px]" aria-hidden></div>
-            <div className="pointer-events-none absolute inset-x-0 -top-8 h-24 bg-gradient-to-b from-white/40 via-white/10 to-transparent" aria-hidden></div>
+          <Reveal staggerChildren className="relative overflow-hidden rounded-3xl min-h-[360px] md:min-h-[440px] flex items-center justify-center">
+            {/* Background image now belongs to the section area (no card styling) */}
+            <Image src="/new graph.png" alt="Projection graph background" fill className="object-cover object-[center_15%]" />
+            {/* Subtle edge fades into white background */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-8 md:h-12 bg-gradient-to-b from-white to-transparent z-20" aria-hidden></div>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 md:h-12 bg-gradient-to-t from-white to-transparent z-20" aria-hidden></div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 md:w-12 bg-gradient-to-r from-white to-transparent z-20" aria-hidden></div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 md:w-12 bg-gradient-to-l from-white to-transparent z-20" aria-hidden></div>
             <div className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-bnb-blue/20 blur-3xl" aria-hidden></div>
             <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-bnb-blue/10 blur-3xl" aria-hidden></div>
             {/* Subtle moving sheen */}
@@ -786,7 +788,7 @@ export default function WhatWeOfferPage() {
             />
             {/* Content */}
             <div className="relative z-10 text-center">
-              <div className="inline-block rounded-2xl bg-white px-6 py-5 border border-white/30 shadow-md max-w-3xl mx-auto">
+              <div className="inline-block rounded-2xl bg-white px-6 py-5 border border-white/30 max-w-3xl mx-auto">
                 <div className="flex items-center justify-center gap-3 mb-3">
                   <svg className="w-7 h-7 text-bnb-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -847,16 +849,13 @@ export default function WhatWeOfferPage() {
               <ServicesStepper />
             </Reveal>
 
-            {/* Bottom CTA */}
+            {/* Bottom CTA (button removed) */}
             <Reveal staggerChildren className="text-center bg-bnb-navy/80 rounded-3xl p-8 md:p-12 border border-white/20 shadow-2xl backdrop-blur">
               <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready To Experience The Difference?</h4>
-              <p className="text-white/85 mb-8 max-w-2xl mx-auto text-lg">
+              <p className="text-white/85 max-w-2xl mx-auto text-lg">
                 Let us show you how our comprehensive system can transform your property into a high-performing rental
                 that guests love and you profit from.
               </p>
-              <Button asChild size="lg" className="bg-bnb-blue hover:bg-opacity-90 text-white px-8 py-3 rounded-full">
-                <Link href="#contact-us">See Your Property's Potential</Link>
-              </Button>
             </Reveal>
           </Reveal>
         </div>
@@ -982,6 +981,71 @@ export default function WhatWeOfferPage() {
 
         
           </div>
+      </section>
+
+      <section className="py-16 md:py-20 bg-bnb-blue/5 relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-20 right-10 w-24 h-24 bg-bnb-blue/10 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-10 w-32 h-32 bg-bnb-blue/5 rounded-full blur-3xl"></div>
+
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
+            {/* Video Thumbnail */}
+            <div className="relative">
+              <a
+                href="https://www.youtube.com/watch?v=fd5Y72ReV10"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative aspect-video rounded-2xl overflow-hidden shadow-xl bg-bnb-gray-dark group cursor-pointer"
+              >
+                <Image
+                  src="/YT THUMBNAILS (10).png"
+                  alt="Homeowner testimonials featuring Floyd & Kim Zook and Willie & Kathy Zook sharing their BNB Breeze experience"
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {/* Play Button Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <div className="flex items-center justify-center w-20 h-20 bg-white/70 hover:bg-white/80 rounded-full transition-all duration-300 group-hover:scale-110">
+                    <svg className="w-10 h-10 text-bnb-blue ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+                {/* Click to Watch Text */}
+                <div className="absolute bottom-4 left-4">
+                  <span className="bg-bnb-blue text-white px-3 py-1 rounded-full text-sm font-medium">
+                    CLICK HERE TO WATCH
+                  </span>
+                </div>
+              </a>
+            </div>
+
+            {/* Content */}
+            <div>
+              <div className="inline-block px-4 py-2 bg-bnb-blue/10 rounded-full mb-4">
+                <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">Homeowner Stories</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-bnb-navy mb-6 leading-tight">
+                Why Owners Choose BNB Breeze
+              </h2>
+              <p className="text-bnb-gray-dark text-lg leading-relaxed mb-6">
+                There's no better way to understand the BNB Breeze difference than hearing it directly from our
+                homeowners. In this video, Floyd & Kim Zook and Willie & Kathy Zook share why they trusted us with their
+                short-term rentals—and how our hands-on expertise turned their properties into reliable, worry-free
+                investments that continue to thrive.
+              </p>
+              <a
+                href="https://www.youtube.com/watch?v=fd5Y72ReV10"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-full bg-bnb-blue px-6 py-3 text-sm font-semibold text-white hover:bg-opacity-90"
+              >
+                Click Here To Watch
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="py-16 md:py-20 bg-bnb-blue/5 relative overflow-hidden">
@@ -1212,71 +1276,6 @@ export default function WhatWeOfferPage() {
             </p>
           </Reveal>
           <FeatureGrid features={coreServices} columns={2} />
-        </div>
-      </section>
-
-      <section className="py-16 md:py-20 bg-bnb-blue/5 relative overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute top-20 right-10 w-24 h-24 bg-bnb-blue/10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 left-10 w-32 h-32 bg-bnb-blue/5 rounded-full blur-3xl"></div>
-
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
-            {/* Video Thumbnail */}
-            <div className="relative">
-              <a
-                href="https://www.youtube.com/watch?v=fd5Y72ReV10"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block relative aspect-video rounded-2xl overflow-hidden shadow-xl bg-bnb-gray-dark group cursor-pointer"
-              >
-                <Image
-                  src="/YT THUMBNAILS (10).png"
-                  alt="Homeowner testimonials featuring Floyd & Kim Zook and Willie & Kathy Zook sharing their BNB Breeze experience"
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <div className="flex items-center justify-center w-20 h-20 bg-white/70 hover:bg-white/80 rounded-full transition-all duration-300 group-hover:scale-110">
-                    <svg className="w-10 h-10 text-bnb-blue ml-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-                {/* Click to Watch Text */}
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-bnb-blue text-white px-3 py-1 rounded-full text-sm font-medium">
-                    CLICK HERE TO WATCH
-                  </span>
-                </div>
-              </a>
-            </div>
-
-            {/* Content */}
-            <div>
-              <div className="inline-block px-4 py-2 bg-bnb-blue/10 rounded-full mb-4">
-                <span className="text-bnb-blue font-semibold text-sm uppercase tracking-wide">Homeowner Stories</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-bnb-navy mb-6 leading-tight">
-                Why Owners Choose BNB Breeze
-              </h2>
-              <p className="text-bnb-gray-dark text-lg leading-relaxed mb-6">
-                There's no better way to understand the BNB Breeze difference than hearing it directly from our
-                homeowners. In this video, Floyd & Kim Zook and Willie & Kathy Zook share why they trusted us with their
-                short-term rentals—and how our hands-on expertise turned their properties into reliable, worry-free
-                investments that continue to thrive.
-              </p>
-              <a
-                href="https://www.youtube.com/watch?v=fd5Y72ReV10"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-bnb-blue hover:text-bnb-blue/80 font-semibold transition-colors"
-              >
-                🎬 CLICK HERE TO WATCH
-              </a>
-            </div>
-          </div>
         </div>
       </section>
 

@@ -11,13 +11,13 @@ import { ChevronLeft, ChevronRight, Check } from "lucide-react"
 
 const SERVICES: { key: string; title: string; bullets: string[] }[] = [
   { key: "reservations", title: "Reservations Management", bullets: ["24/7 Guest Communications", "Guest Review Management", "Dreamweaving (One of our favorites — ask us why)", "Custom Guest Guidebooks", "Lead Management"] },
+  { key: "revenue", title: "Revenue Management", bullets: ["Dynamic Pricing", "Performance Reporting and Analytics", "Proformas and Revenue Projections", "Market Data and Analysis"] },
+  { key: "marketing", title: "Marketing", bullets: ["Listing Creation", "Ongoing Listing Optimization to Latest SEO Trends", "Listing on Multiple OTAs", "Access to BNB Breeze Repeat Customer Base", "Property Photography and Staging", "The Breeze Club Booking Program", "Email Marketing"] },
   { key: "maintenance", title: "Maintenance Management", bullets: ["Subcontractor Management", "Guest Damages Protection (At no cost to you!)", "Preventive Maintenance", "Guest Maintenance Resolutions"] },
   { key: "homeowner", title: "Homeowner Relations", bullets: ["Portfolio Reporting, Advice, Planning", "Owner Portal", "STR Industry Tips/Tricks"] },
   { key: "cleaning", title: "Cleaning Management", bullets: ["Oversees Turnovers and Cleanings", "Restocking Supplies", "Trains cleaners to BNB Breeze cleaning standards.", "Schedules Deep Cleaning"] },
-  { key: "revenue", title: "Revenue Management", bullets: ["Dynamic Pricing", "Performance Reporting and Analytics", "Proformas and Revenue Projections", "Market Data and Analysis"] },
   { key: "accounting", title: "Accounting", bullets: ["Monthly Homeowner Payouts", "Create State Sales Tax Account", "Collect and Remit Sales tax to local government"] },
   { key: "administration", title: "Administration", bullets: ["STR Licensing and Registration"] },
-  { key: "marketing", title: "Marketing", bullets: ["Listing Creation", "Ongoing Listing Optimization to Latest SEO Trends", "Listing on Multiple OTAs", "Access to BNB Breeze Repeat Customer Base", "Property Photography and Staging", "The Breeze Club Booking Program", "Email Marketing"] },
 ]
 
 function nextIndex(current: number, delta: number, total: number): number {
@@ -110,7 +110,7 @@ export default function ServicesStepper() {
                 animate="center"
                 exit="exit"
                 transition={{ duration, ease: "easeOut" }}
-                className={`grid gap-3 relative ${isSingleBullet ? "" : "min-h-[220px]"}`}
+                className={`grid gap-3 relative items-start content-start ${isSingleBullet ? "" : "min-h-[220px]"}`}
               >
                 {service.bullets.map((b, i) => (
                   <motion.div
@@ -125,7 +125,7 @@ export default function ServicesStepper() {
                         <Check className="w-3.5 h-3.5" />
                       </div>
                     </div>
-                    <div className="leading-relaxed">{b}</div>
+                    <div className="leading-tight">{b}</div>
                   </motion.div>
                 ))}
               </motion.div>
