@@ -175,6 +175,106 @@ const FeatureGrid: React.FC<{ features: ServiceFeature[]; columns?: 2 | 3 }> = (
   </div>
 )
 
+// Animated SVG background graph used behind the revenue projection CTA
+const AnimatedRevenueGraph: React.FC<{ className?: string }> = ({ className = "" }) => {
+  // Path approximates an upward trending curve similar to the reference image
+  const pathD = [
+    "M 80 300",
+    "C 120 315, 150 310, 180 318",
+    "S 230 330, 260 320",
+    "S 320 300, 360 265",
+    "S 410 235, 450 255",
+    "S 510 245, 550 280",
+    "S 620 255, 660 230",
+    "S 720 205, 760 185",
+    "S 810 160, 860 120"
+  ].join(" ")
+
+  return (
+    <div className={cn("absolute inset-0", className)} aria-hidden>
+      <svg viewBox="0 0 1000 400" preserveAspectRatio="none" className="w-full h-full">
+        <defs>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#3b82f6" />
+            <stop offset="75%" stopColor="#60a5fa" />
+            <stop offset="100%" stopColor="#ffffff" />
+          </linearGradient>
+          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#22d3ee" />
+            <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.4" />
+          </linearGradient>
+          <filter id="barGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="18" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Background */}
+        <rect x="0" y="0" width="1000" height="400" fill="#FFFFFF" />
+
+        {/* Grid lines - thin, animated vertical lines */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <motion.line
+            key={i}
+            x1={100 + i * 75}
+            x2={100 + i * 75}
+            initial={{ y1: 350, y2: 350, opacity: 0 }}
+            whileInView={{ y1: 50, y2: 350, opacity: 1 }}
+            viewport={{ once: false, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.08 * i }}
+            stroke="#00B0EA"
+            strokeOpacity={0.18}
+            strokeWidth={1}
+          />
+        ))}
+
+        {/* Right glow bar */}
+        <motion.rect
+          x={820}
+          width={90}
+          rx={10}
+          initial={{ height: 0, y: 360 }}
+          whileInView={{ height: 260, y: 80 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 2.4, ease: "easeOut", delay: 1.6 }}
+          fill="url(#barGrad)"
+          filter="url(#barGlow)"
+        />
+
+        {/* Underlay thicker blue path for depth */}
+        <motion.path
+          d={pathD}
+          stroke="#2563eb"
+          strokeOpacity={0.6}
+          strokeWidth={10}
+          fill="none"
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 4.8, ease: "easeInOut" }}
+        />
+
+        {/* Main animated line */}
+        <motion.path
+          d={pathD}
+          stroke="url(#lineGrad)"
+          strokeWidth={6}
+          fill="none"
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 4.8, ease: "easeInOut" }}
+        />
+      </svg>
+    </div>
+  )
+}
+
 // Simple, consistent-width stat card used by the marquee
 // Removed unused StatCard and statsData
 
@@ -733,12 +833,6 @@ export default function WhatWeOfferPage() {
                     </svg>
                   </div>
                 </div>
-                {/* Click to Watch Text */}
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-bnb-blue text-white px-3 py-1 rounded-full text-sm font-medium">
-                    CLICK HERE TO WATCH
-                  </span>
-                </div>
               </a>
             </div>
 
@@ -768,27 +862,14 @@ export default function WhatWeOfferPage() {
 
           {/* Revenue Projection CTA */}
           <Reveal staggerChildren className="relative overflow-hidden rounded-3xl min-h-[360px] md:min-h-[440px] flex items-center justify-center">
-            {/* Background image now belongs to the section area (no card styling) */}
-            <Image src="/new graph.png" alt="Projection graph background" fill className="object-cover object-[center_15%]" />
-            {/* Subtle edge fades into white background */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-8 md:h-12 bg-gradient-to-b from-white to-transparent z-20" aria-hidden></div>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 md:h-12 bg-gradient-to-t from-white to-transparent z-20" aria-hidden></div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-8 md:w-12 bg-gradient-to-r from-white to-transparent z-20" aria-hidden></div>
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-8 md:w-12 bg-gradient-to-l from-white to-transparent z-20" aria-hidden></div>
-            <div className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-bnb-blue/20 blur-3xl" aria-hidden></div>
-            <div className="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-bnb-blue/10 blur-3xl" aria-hidden></div>
-            {/* Subtle moving sheen */}
-            <motion.div
-              className="pointer-events-none absolute -inset-y-10 -left-1/3 w-1/3 rotate-12 bg-gradient-to-r from-transparent via-white/35 to-transparent"
-              initial={{ x: "-40%" }}
-              whileInView={{ x: ["-40%", "140%"] }}
-              viewport={{ once: false, amount: 0.6 }}
-              transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, repeatDelay: 2 }}
-              aria-hidden
-            />
+            {/* Animated SVG graph background */}
+            <AnimatedRevenueGraph />
+            {/* Removed gradient edge fades and decorative overlays for a clean edge */}
             {/* Content */}
             <div className="relative z-10 text-center">
-              <div className="inline-block rounded-2xl bg-white px-6 py-5 border border-white/30 max-w-3xl mx-auto">
+              <div className="relative inline-block rounded-2xl bg-white/15 backdrop-blur-md px-6 py-5 border border-white/30 ring-1 ring-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.18)] max-w-3xl mx-auto overflow-hidden">
+                <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/25 via-white/10 to-transparent" aria-hidden></span>
+                <span className="pointer-events-none absolute -top-6 -left-8 w-40 h-20 bg-white/60 rounded-full blur-3xl opacity-50" aria-hidden></span>
                 <div className="flex items-center justify-center gap-3 mb-3">
                   <svg className="w-7 h-7 text-bnb-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -850,9 +931,11 @@ export default function WhatWeOfferPage() {
             </Reveal>
 
             {/* Bottom CTA (button removed) */}
-            <Reveal staggerChildren className="text-center bg-bnb-navy/80 rounded-3xl p-8 md:p-12 border border-white/20 shadow-2xl backdrop-blur">
-              <h4 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready To Experience The Difference?</h4>
-              <p className="text-white/85 max-w-2xl mx-auto text-lg">
+            <Reveal staggerChildren className="relative inline-block mx-auto text-center bg-bnb-navy/60 backdrop-blur-md rounded-3xl px-6 py-6 md:px-8 md:py-8 border border-white/20 ring-1 ring-white/10 shadow-2xl overflow-hidden">
+              <span className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-b from-white/20 via-white/10 to-transparent" aria-hidden></span>
+              <span className="pointer-events-none absolute -top-6 -left-10 w-40 h-20 bg-white/50 rounded-full blur-3xl opacity-50" aria-hidden></span>
+              <h4 className="relative z-10 text-2xl md:text-3xl font-bold text-white mb-3">Ready To Experience The Difference?</h4>
+              <p className="relative z-10 text-white/85 text-lg max-w-prose mx-auto">
                 Let us show you how our comprehensive system can transform your property into a high-performing rental
                 that guests love and you profit from.
               </p>
@@ -1011,12 +1094,6 @@ export default function WhatWeOfferPage() {
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
-                </div>
-                {/* Click to Watch Text */}
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-bnb-blue text-white px-3 py-1 rounded-full text-sm font-medium">
-                    CLICK HERE TO WATCH
-                  </span>
                 </div>
               </a>
             </div>
