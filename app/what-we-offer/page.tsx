@@ -719,12 +719,6 @@ export default function WhatWeOfferPage() {
                 >
                   Partner With Us
                 </Link>
-                <Link
-                  href="#process-startup"
-                  className="rounded-2xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10"
-                >
-                  See Our Process
-                </Link>
                 
               </div>
 
@@ -908,38 +902,33 @@ export default function WhatWeOfferPage() {
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <Reveal staggerChildren className="text-center mb-12">
-            <div className="inline-block relative mb-4 rounded-full px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 ring-1 ring-white/10 shadow-lg overflow-hidden">
+            <div className="relative w-fit mx-auto mb-2 rounded-full px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 ring-1 ring-white/10 shadow-lg overflow-hidden">
               <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/25 via-white/10 to-transparent" aria-hidden="true"></span>
               <span className="pointer-events-none absolute -top-2 -left-1 w-24 h-10 bg-white/40 rounded-full blur-2xl opacity-50" aria-hidden="true"></span>
               <span className="relative z-10 text-white font-semibold text-sm uppercase tracking-wide">Complete Management</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              The System Your STR Needs
-            </h2>
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
+            <div className="relative w-fit mx-auto text-center bg-bnb-navy/60 backdrop-blur-md rounded-3xl px-4 py-4 md:px-6 md:py-5 border border-white/20 ring-1 ring-white/10 shadow-2xl overflow-hidden mb-4">
+              <span className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-b from-white/20 via-white/10 to-transparent" aria-hidden></span>
+              <span className="pointer-events-none absolute -top-6 -left-10 w-40 h-20 bg-white/50 rounded-full blur-3xl opacity-50" aria-hidden></span>
+              <h2 className="relative z-10 text-4xl md:text-5xl font-bold text-white mb-3 leading-tight">
+                The System Your STR Needs
+              </h2>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-6">
               A 360° Management System—Designed By Investors, For Investors—Built To Delight Guests And Maximize Your
               Returns.
             </h3>
-            <p className="text-lg md:text-xl text-white/80 max-w-4xl mx-auto leading-relaxed mb-12">
-              From marketing and revenue management to cleaning, maintenance, and guest experience, we handle every
-              detail so your property thrives year after year.
-            </p>
+            
 
             {/* Management System Stepper (replaces static graphic) */}
-            <Reveal staggerChildren className="mb-12">
+            <Reveal staggerChildren className="mb-0">
               <ServicesStepper />
             </Reveal>
 
-            {/* Bottom CTA (button removed) */}
-            <Reveal staggerChildren className="relative inline-block mx-auto text-center bg-bnb-navy/60 backdrop-blur-md rounded-3xl px-6 py-6 md:px-8 md:py-8 border border-white/20 ring-1 ring-white/10 shadow-2xl overflow-hidden">
-              <span className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-b from-white/20 via-white/10 to-transparent" aria-hidden></span>
-              <span className="pointer-events-none absolute -top-6 -left-10 w-40 h-20 bg-white/50 rounded-full blur-3xl opacity-50" aria-hidden></span>
-              <h4 className="relative z-10 text-2xl md:text-3xl font-bold text-white mb-3">Ready To Experience The Difference?</h4>
-              <p className="relative z-10 text-white/85 text-lg max-w-prose mx-auto">
-                Let us show you how our comprehensive system can transform your property into a high-performing rental
-                that guests love and you profit from.
-              </p>
-            </Reveal>
+            {/* Plain follow-up text below the component */}
+            <p className="mt-0 text-white/85 text-center max-w-2xl mx-auto font-medium">
+              Let us show you how our comprehensive system can transform your property into a high-performing rental that guests love and you profit from.
+            </p>
           </Reveal>
         </div>
       </section>
